@@ -52,6 +52,10 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
     var listData = snapshot.data;
 
     if (listData != null) {
+      if (listData.isEmpty) {
+        return _buildEmptyList();
+      }
+
       var children = listData
           .where((n) => n.matches(searchQuery))
           .map((e) => _NoteWidget(e, widget.notesService));
@@ -63,6 +67,19 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
     }
 
     return CircularProgressIndicator();
+  }
+
+  Widget _buildEmptyList() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image(image: AssetImage('assets/images/cat.png')),
+        Container(
+          padding: EdgeInsets.only(top: 24),
+          child: Text('Press "+" to add a note'),
+        )
+      ],
+    );
   }
 
   void _navToNewNote() {
