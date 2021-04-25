@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notik/data/notes.service.dart';
+import 'package:notik/domain/note.dart';
 import 'package:notik/views/new.note.dart';
+import 'package:notik/views/note.details.dart';
 import 'package:notik/views/notes.list.dart';
 
 void main() {
@@ -21,6 +23,11 @@ class App extends StatelessWidget {
   }
 
   Route<dynamic> _generateRoute(RouteSettings settings) {
+    if (settings.name == '/note') {
+      final args = settings.arguments as Note;
+      return MaterialPageRoute(builder: (context) => NoteDetailsScreen(args));
+    }
+
     if (settings.name == '/newnote') {
       return MaterialPageRoute(
           builder: (context) => NewNoteScreen(

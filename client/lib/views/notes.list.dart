@@ -70,24 +70,32 @@ class _NoteWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      // borderOnForeground: true,
-      shadowColor: Theme.of(context).shadowColor,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      elevation: 3,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _note.name,
-              style: Theme.of(context).textTheme.headline4,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Padding(padding: EdgeInsets.only(top: 16)),
-            Text(_note.text, overflow: TextOverflow.ellipsis),
-          ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          "/note",
+          arguments: _note,
+        );
+      },
+      child: Card(
+        shadowColor: Theme.of(context).shadowColor,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        elevation: 3,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _note.name,
+                style: Theme.of(context).textTheme.headline4,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Padding(padding: EdgeInsets.only(top: 16)),
+              Text(_note.text, overflow: TextOverflow.ellipsis),
+            ],
+          ),
         ),
       ),
     );
