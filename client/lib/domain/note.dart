@@ -9,7 +9,16 @@ class Note {
     return id == note.id && name == note.name && text == note.text;
   }
 
-  copyWith({String? id, String? name, String? text}) {
+  /// Checks whether a note matches search string
+  bool matches(String str) {
+    if (str.isEmpty) {
+      return true;
+    }
+    final s = str.toLowerCase();
+    return name.toLowerCase().contains(s) || text.toLowerCase().contains(s);
+  }
+
+  Note copyWith({String? id, String? name, String? text}) {
     return Note(
       id ?? this.id,
       name ?? this.name,

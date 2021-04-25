@@ -4,15 +4,17 @@ import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
 class NotesService {
-  get note$ => _notesSubject.stream;
+  ValueStream<List<Note>> get note$ => _notesSubject.stream;
   var _notesSubject = BehaviorSubject<List<Note>>();
 
   final _db = LocalStorage('notik');
   final _dbCollection = "notes";
   final _idGenerator = Uuid();
 
-  void refresh() async {
+  void init() async {
+    await _db.ready;
     List<dynamic>? json = await _db.getItem(_dbCollection);
+
     List<Note> notes = (json ?? []).map((e) => Note.fromJSON(e)).toList();
     this._notesSubject.add(notes);
   }
@@ -34,10 +36,6 @@ class NotesService {
     await _updateNotes(notes);
   }
 
-  void dispose() {
-    _notesSubject.close();
-  }
-
   Future<void> delete(Note note) async {
     if (note.id == null) {
       return;
@@ -51,7 +49,13 @@ class NotesService {
 
   Future<void> _updateNotes(List<Note> notes) async {
     List<dynamic> json = notes.map((n) => n.toJSON()).toList();
+    await _db.ready;
     await _db.setItem(_dbCollection, json);
+
     _notesSubject.add(notes);
+  }
+
+  void dispose() {
+    _notesSubject.close();
   }
 }

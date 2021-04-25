@@ -6,7 +6,6 @@ import 'package:notik/views/note.details.dart';
 import 'package:notik/views/notes.list.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }
 
@@ -42,7 +41,7 @@ class App extends StatelessWidget {
     }
 
     return MaterialPageRoute(
-      builder: (context) => NotesListScreen(
+      builder: (context) => NotesList(
         notesService: this._notesService,
       ),
     );

@@ -2,32 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
+import 'package:notik/views/mixins/list.search.dart';
 
-class NotesListScreen extends StatefulWidget {
+class NotesList extends StatefulWidget {
   final NotesService notesService;
-  const NotesListScreen({
+  const NotesList({
     Key? key,
     required this.notesService,
   }) : super(key: key);
 
   @override
   createState() {
-    return _NotesListScreenState();
+    return _NotesListState();
   }
 }
 
-class _NotesListScreenState extends State<NotesListScreen> {
+class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
   @override
   void initState() {
     super.initState();
-    this.widget.notesService.refresh();
+    this.widget.notesService.init();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notes List"),
+        leading: isSearching ? const BackButton() : null,
+        title: isSearching
+            ? buildSearchField(searchHint: "Search notes...")
+            : Text("Notes List"),
+        actions: buildSearchActions(),
       ),
       body: Center(
         child: StreamBuilder<List<Note>>(
@@ -47,7 +52,9 @@ class _NotesListScreenState extends State<NotesListScreen> {
     var listData = snapshot.data;
 
     if (listData != null) {
-      var children = listData.map((e) => _NoteWidget(e, widget.notesService));
+      var children = listData
+          .where((n) => n.matches(searchQuery))
+          .map((e) => _NoteWidget(e, widget.notesService));
       return ListView(children: children.toList());
     }
 
