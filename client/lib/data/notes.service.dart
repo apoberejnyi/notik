@@ -37,12 +37,31 @@ class NotesService {
     await doc.set(note.toJSON());
 
     var notes = _notesSubject.value ?? [];
-    notes.add(note);
+    var index = notes.indexWhere((e) => e.id == note.id);
+    if (index == -1) {
+      notes.add(note);
+    } else {
+      notes[index] = note;
+    }
 
     _notesSubject.add(notes);
   }
 
   void dispose() {
     _notesSubject.close();
+  }
+
+  Future<void> delete(Note note) async {
+    if (note.id == null) {
+      return;
+    }
+
+    DocumentRef doc = _db.collection(_dbCollection).doc(note.id);
+    await doc.delete();
+
+    var notes = _notesSubject.value ?? [];
+    notes.removeWhere((e) => e.equals(note));
+
+    _notesSubject.add(notes);
   }
 }

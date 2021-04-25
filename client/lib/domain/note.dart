@@ -5,6 +5,10 @@ class Note {
 
   const Note(this.id, this.name, this.text);
 
+  bool equals(Note note) {
+    return id == note.id && name == note.name && text == note.text;
+  }
+
   copyWith({String? id, String? name, String? text}) {
     return Note(
       id ?? this.id,

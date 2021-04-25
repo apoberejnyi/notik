@@ -5,8 +5,10 @@ import 'package:notik/domain/note.dart';
 
 class NotesListScreen extends StatefulWidget {
   final NotesService notesService;
-  const NotesListScreen({Key? key, required this.notesService})
-      : super(key: key);
+  const NotesListScreen({
+    Key? key,
+    required this.notesService,
+  }) : super(key: key);
 
   @override
   createState() {
@@ -42,14 +44,11 @@ class _NotesListScreenState extends State<NotesListScreen> {
   }
 
   Widget _buildList(BuildContext context, AsyncSnapshot<List<Note>> snapshot) {
-    var d = snapshot.data;
-    if (d != null) {
-      List<_NoteWidget> children = [];
-      for (var e in d) {
-        children.add(_NoteWidget(e));
-      }
+    var listData = snapshot.data;
 
-      return ListView(children: children);
+    if (listData != null) {
+      var children = listData.map((e) => _NoteWidget(e, widget.notesService));
+      return ListView(children: children.toList());
     }
 
     if (snapshot.hasError) {
@@ -68,39 +67,51 @@ class _NotesListScreenState extends State<NotesListScreen> {
 }
 
 class _NoteWidget extends StatelessWidget {
-  const _NoteWidget(this._note);
+  const _NoteWidget(this._note, this._service);
+
+  final NotesService _service;
   final Note _note;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          "/note",
-          arguments: _note,
-        );
-      },
-      child: Card(
-        shadowColor: Theme.of(context).shadowColor,
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        elevation: 3,
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _note.name,
-                style: Theme.of(context).textTheme.headline4,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16)),
-              Text(_note.text, overflow: TextOverflow.ellipsis),
-            ],
+    return Dismissible(
+      key: Key(_note.id!),
+      onDismissed: _deleteNote,
+      child: GestureDetector(
+        onTap: () => _navToEditNote(context),
+        child: Card(
+          shadowColor: Theme.of(context).shadowColor,
+          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          elevation: 3,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _note.name,
+                  style: Theme.of(context).textTheme.headline4,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Padding(padding: EdgeInsets.only(top: 16)),
+                Text(_note.text, overflow: TextOverflow.ellipsis),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  _deleteNote(DismissDirection dir) {
+    _service.delete(_note);
+  }
+
+  _navToEditNote(BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      "/note",
+      arguments: _note,
     );
   }
 }
