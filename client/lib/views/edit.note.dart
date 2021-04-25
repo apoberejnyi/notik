@@ -67,6 +67,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
               padding: const EdgeInsets.all(20),
               child: TextField(
                 controller: TextEditingController(text: note.text),
+                maxLines: null,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Note text',

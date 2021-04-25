@@ -59,7 +59,10 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
       var children = listData
           .where((n) => n.matches(searchQuery))
           .map((e) => _NoteWidget(e, widget.notesService));
-      return ListView(children: children.toList());
+      return ListView(
+        padding: EdgeInsets.only(top: 16),
+        children: children.toList(),
+      );
     }
 
     if (snapshot.hasError) {
@@ -112,19 +115,39 @@ class _NoteWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _note.name,
-                  style: Theme.of(context).textTheme.headline4,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Padding(padding: EdgeInsets.only(top: 16)),
-                Text(_note.text, overflow: TextOverflow.ellipsis),
+                _buildNoteTitle(context),
+                ..._buildNoteText(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildNoteTitle(BuildContext context) {
+    return Text(
+      _note.name,
+      style: Theme.of(context).textTheme.headline5,
+      maxLines: 1,
+      softWrap: false,
+      overflow: TextOverflow.fade,
+    );
+  }
+
+  List<Widget> _buildNoteText() {
+    if (_note.text.isEmpty) {
+      return [];
+    }
+
+    return [
+      Padding(padding: EdgeInsets.only(top: 16)),
+      Text(
+        _note.text,
+        overflow: TextOverflow.fade,
+        maxLines: 3,
+      )
+    ];
   }
 
   _deleteNote(DismissDirection dir) {
