@@ -26,8 +26,10 @@ class EditNoteScreen extends StatefulWidget {
 class _EditNoteScreenState extends State<EditNoteScreen> {
   late Note note;
 
-  _EditNoteScreenState() {
-    note = widget.note;
+  @override
+  void initState() {
+    super.initState();
+    this.note = widget.note;
   }
 
   @override
