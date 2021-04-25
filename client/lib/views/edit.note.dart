@@ -8,12 +8,12 @@ enum EditNoteFocus { name, none }
 class EditNoteScreen extends StatefulWidget {
   final NotesService notesService;
   final Note note;
-  final EditNoteFocus focus;
+  final EditNoteFocus? focus;
 
   EditNoteScreen({
-    Key key,
-    @required this.notesService,
-    @required this.note,
+    Key? key,
+    required this.notesService,
+    required this.note,
     this.focus,
   }) : super(key: key);
 
@@ -24,7 +24,7 @@ class EditNoteScreen extends StatefulWidget {
 }
 
 class _EditNoteScreenState extends State<EditNoteScreen> {
-  Note note;
+  late Note note;
 
   _EditNoteScreenState() {
     note = widget.note;
@@ -51,7 +51,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
               autofocus: widget.focus == EditNoteFocus.name,
               controller: TextEditingController(text: note.name),
               style: TextStyle(
-                fontSize: Theme.of(context).textTheme.headline4.fontSize,
+                fontSize: Theme.of(context).textTheme.headline4!.fontSize,
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,

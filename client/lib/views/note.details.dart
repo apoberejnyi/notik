@@ -9,9 +9,9 @@ class NoteDetailsScreen extends StatelessWidget {
   final Note note;
 
   const NoteDetailsScreen({
-    Key key,
-    @required this.notesService,
-    @required this.note,
+    Key? key,
+    required this.notesService,
+    required this.note,
   }) : super(key: key);
 
   @override

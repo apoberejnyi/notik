@@ -5,7 +5,7 @@ import 'package:notik/domain/note.dart';
 
 class NotesListScreen extends StatefulWidget {
   final NotesService notesService;
-  const NotesListScreen({Key key, @required this.notesService})
+  const NotesListScreen({Key? key, required this.notesService})
       : super(key: key);
 
   @override
@@ -40,9 +40,10 @@ class _NotesListScreenState extends State<NotesListScreen> {
   }
 
   Widget _buildList(BuildContext context, AsyncSnapshot<List<Note>> snapshot) {
-    if (snapshot.hasData) {
+    var d = snapshot.data;
+    if (d != null) {
       List<_NoteWidget> children = [];
-      for (var e in snapshot.data) {
+      for (var e in d) {
         children.add(_NoteWidget(e));
       }
 

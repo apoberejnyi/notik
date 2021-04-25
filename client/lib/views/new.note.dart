@@ -6,7 +6,7 @@ import 'package:notik/views/edit.note.dart';
 
 class NewNoteScreen extends StatelessWidget {
   final NotesService notesService;
-  const NewNoteScreen({Key key, @required this.notesService}) : super(key: key);
+  const NewNoteScreen({Key? key, required this.notesService}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,7 @@ import 'package:notik/domain/note.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NotesService {
-  Map<String, Note> _notes = Map();
+  Map<String?, Note> _notes = Map();
 
   BehaviorSubject<List<Note>> note$ = BehaviorSubject.seeded([]);
 
