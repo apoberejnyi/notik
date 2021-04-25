@@ -5,6 +5,10 @@ class Note {
 
   const Note(this.id, this.name, this.text);
 
+  bool get isEmpty {
+    return name == "" && text == "";
+  }
+
   bool equals(Note note) {
     return id == note.id && name == note.name && text == note.text;
   }

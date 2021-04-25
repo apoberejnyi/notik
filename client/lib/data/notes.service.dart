@@ -42,7 +42,11 @@ class NotesService {
     }
 
     var notes = _notesSubject.value ?? [];
-    notes.removeWhere((e) => e.equals(note));
+    var index = notes.indexWhere((e) => e.id == note.id);
+
+    if (index != -1) {
+      notes.removeAt(index);
+    }
 
     await _updateNotes(notes);
   }

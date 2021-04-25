@@ -41,7 +41,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
           IconButton(
             icon: Icon(Icons.save),
             tooltip: 'Save note',
-            onPressed: _setNote,
+            onPressed: _saveNote,
           )
         ],
       ),
@@ -81,8 +81,14 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     );
   }
 
-  _setNote() async {
-    await widget.notesService.set(note);
+  _saveNote() async {
     Navigator.pop(context);
+    if (note.isEmpty) {
+      await widget.notesService.delete(note);
+      final snackBar = SnackBar(content: Text('Empty note is deleted'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      await widget.notesService.set(note);
+    }
   }
 }
