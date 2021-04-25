@@ -1,47 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
+import 'package:notik/views/edit.note.dart';
 
 class NoteDetailsScreen extends StatelessWidget {
-  final Note _note;
-  NoteDetailsScreen(this._note);
+  final NotesService notesService;
+  final Note note;
+
+  const NoteDetailsScreen({
+    Key key,
+    @required this.notesService,
+    @required this.note,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Notes List"),
-      ),
-      body: Column(
-        children: [
-          Container(
-              padding: const EdgeInsets.all(20),
-              child: TextField(
-                readOnly: true,
-                controller: TextEditingController(text: this._note.name),
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.headline4.fontSize,
-                ),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Note name',
-                ),
-              )),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              child: TextField(
-                readOnly: true,
-                controller: TextEditingController(text: this._note.text),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Note text',
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return EditNoteScreen(notesService: notesService, note: this.note);
   }
 }

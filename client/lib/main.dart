@@ -24,20 +24,26 @@ class App extends StatelessWidget {
 
   Route<dynamic> _generateRoute(RouteSettings settings) {
     if (settings.name == '/note') {
-      final args = settings.arguments as Note;
-      return MaterialPageRoute(builder: (context) => NoteDetailsScreen(args));
+      return MaterialPageRoute(
+        builder: (context) => NoteDetailsScreen(
+          notesService: this._notesService,
+          note: settings.arguments as Note,
+        ),
+      );
     }
 
     if (settings.name == '/newnote') {
       return MaterialPageRoute(
-          builder: (context) => NewNoteScreen(
-                notesService: this._notesService,
-              ));
+        builder: (context) => NewNoteScreen(
+          notesService: this._notesService,
+        ),
+      );
     }
 
     return MaterialPageRoute(
-        builder: (context) => NotesListScreen(
-              notesService: this._notesService,
-            ));
+      builder: (context) => NotesListScreen(
+        notesService: this._notesService,
+      ),
+    );
   }
 }
