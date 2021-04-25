@@ -1,38 +1,48 @@
-import 'dart:math';
-
+import 'package:localstore/localstore.dart';
 import 'package:notik/domain/note.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:uuid/uuid.dart';
 
 class NotesService {
-  Map<String?, Note> _notes = Map();
+  get note$ => _notesSubject.stream;
+  var _notesSubject = BehaviorSubject<List<Note>>();
 
-  BehaviorSubject<List<Note>> note$ = BehaviorSubject.seeded([]);
+  final _db = Localstore.instance;
+  final _dbCollection = 'notes';
+  final _idGenerator = Uuid();
 
   void refresh() async {
-    var seed = [
-      Note("1", 'foo', 'here goes foobar'),
-      Note("2", 'bar', 'here goes barfoo'),
-    ];
+    var items = await _db.collection(_dbCollection).get();
 
-    for (var note in seed) {
-      _notes[note.id] = note;
+    if (items == null) {
+      items = Map();
     }
 
-    this.note$.add(_notes.values.toList());
+    List<Note> notes = [];
+    for (var e in items.entries) {
+      Note n = Note.fromJSON(e.key, e.value);
+      notes.add(n);
+    }
+
+    this._notesSubject.add(notes);
   }
 
   Future<void> set(Note note) async {
     if (note.id == null) {
-      final rnd = Random();
-      final id = rnd.nextInt(100).toString();
+      final id = _idGenerator.v4();
       note = note.copyWith(id: id);
     }
 
-    _notes[note.id] = note;
-    note$.add(_notes.values.toList());
+    DocumentRef doc = _db.collection(_dbCollection).doc(note.id);
+    await doc.set(note.toJSON());
+
+    var notes = _notesSubject.value ?? [];
+    notes.add(note);
+
+    _notesSubject.add(notes);
   }
 
   void dispose() {
-    note$.close();
+    _notesSubject.close();
   }
 }

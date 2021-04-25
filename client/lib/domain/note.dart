@@ -16,4 +16,19 @@ class Note {
   factory Note.empty() {
     return Note(null, '', '');
   }
+
+  factory Note.fromJSON(String id, Map<String, dynamic> json) {
+    return Note(
+      id,
+      json['name'],
+      json['text'],
+    );
+  }
+
+  Map<String, dynamic> toJSON() {
+    return {
+      'name': this.name,
+      'text': this.text,
+    };
+  }
 }

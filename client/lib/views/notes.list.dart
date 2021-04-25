@@ -29,7 +29,9 @@ class _NotesListScreenState extends State<NotesListScreen> {
       ),
       body: Center(
         child: StreamBuilder<List<Note>>(
-            stream: this.widget.notesService.note$, builder: _buildList),
+          stream: widget.notesService.note$,
+          builder: _buildList,
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navToNewNote,
