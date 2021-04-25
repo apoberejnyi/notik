@@ -21,9 +21,9 @@ class Note {
     return Note(null, '', '');
   }
 
-  factory Note.fromJSON(String id, Map<String, dynamic> json) {
+  factory Note.fromJSON(Map<String, dynamic> json) {
     return Note(
-      id,
+      json['id'],
       json['name'],
       json['text'],
     );
@@ -31,6 +31,7 @@ class Note {
 
   Map<String, dynamic> toJSON() {
     return {
+      'id': this.id,
       'name': this.name,
       'text': this.text,
     };

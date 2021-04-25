@@ -1,4 +1,4 @@
-import 'package:localstore/localstore.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:notik/domain/note.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
@@ -7,23 +7,13 @@ class NotesService {
   get note$ => _notesSubject.stream;
   var _notesSubject = BehaviorSubject<List<Note>>();
 
-  final _db = Localstore.instance;
-  final _dbCollection = 'notes';
+  final _db = LocalStorage('notik');
+  final _dbCollection = "notes";
   final _idGenerator = Uuid();
 
   void refresh() async {
-    var items = await _db.collection(_dbCollection).get();
-
-    if (items == null) {
-      items = Map();
-    }
-
-    List<Note> notes = [];
-    for (var e in items.entries) {
-      Note n = Note.fromJSON(e.key, e.value);
-      notes.add(n);
-    }
-
+    List<dynamic>? json = await _db.getItem(_dbCollection);
+    List<Note> notes = (json ?? []).map((e) => Note.fromJSON(e)).toList();
     this._notesSubject.add(notes);
   }
 
@@ -33,9 +23,6 @@ class NotesService {
       note = note.copyWith(id: id);
     }
 
-    DocumentRef doc = _db.collection(_dbCollection).doc(note.id);
-    await doc.set(note.toJSON());
-
     var notes = _notesSubject.value ?? [];
     var index = notes.indexWhere((e) => e.id == note.id);
     if (index == -1) {
@@ -44,7 +31,7 @@ class NotesService {
       notes[index] = note;
     }
 
-    _notesSubject.add(notes);
+    await _updateNotes(notes);
   }
 
   void dispose() {
@@ -56,12 +43,15 @@ class NotesService {
       return;
     }
 
-    DocumentRef doc = _db.collection(_dbCollection).doc(note.id);
-    await doc.delete();
-
     var notes = _notesSubject.value ?? [];
     notes.removeWhere((e) => e.equals(note));
 
+    await _updateNotes(notes);
+  }
+
+  Future<void> _updateNotes(List<Note> notes) async {
+    List<dynamic> json = notes.map((n) => n.toJSON()).toList();
+    await _db.setItem(_dbCollection, json);
     _notesSubject.add(notes);
   }
 }
