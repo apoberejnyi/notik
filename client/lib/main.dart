@@ -1,45 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:notik/data/notes.service.dart';
-
-import 'views/overview.dart';
+import 'package:notik/views/new.note.dart';
+import 'package:notik/views/notes.list.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
+  final NotesService _notesService = NotesService();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.deepOrange),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      theme: ThemeData(primarySwatch: Colors.orange),
+      initialRoute: '',
+      onGenerateRoute: _generateRoute,
     );
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
+  Route<dynamic> _generateRoute(RouteSettings settings) {
+    if (settings.name == '/newnote') {
+      return MaterialPageRoute(
+          builder: (context) => NewNoteScreen(
+                notesService: this._notesService,
+              ));
+    }
 
-  @override
-  _MyHomePageState createState() {
-    return _MyHomePageState();
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  NotesService _notesService = NotesService();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: NotesOverview(notesService: this._notesService),
-      ),
-    );
+    return MaterialPageRoute(
+        builder: (context) => NotesListScreen(
+              notesService: this._notesService,
+            ));
   }
 }
