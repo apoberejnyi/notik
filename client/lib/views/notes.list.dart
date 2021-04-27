@@ -90,8 +90,17 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
     );
   }
 
-  void _deleteNote(Note note) {
-    widget.notesService.delete(note);
+  void _deleteNote(Note note) async {
+    await widget.notesService.delete(note);
+
+    final undoBar = SnackBar(
+      content: Text('Note is deleted'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () => widget.notesService.set(note),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(undoBar);
   }
 
   void _navToNewNote() {

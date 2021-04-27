@@ -24,12 +24,14 @@ class EditNoteScreen extends StatefulWidget {
 }
 
 class _EditNoteScreenState extends State<EditNoteScreen> {
-  late Note note;
+  final nameController = TextEditingController();
+  final textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    this.note = widget.note;
+    nameController.text = widget.note.name;
+    textController.text = widget.note.text;
   }
 
   @override
@@ -51,7 +53,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
             padding: const EdgeInsets.all(20),
             child: TextField(
               autofocus: widget.focus == EditNoteFocus.name,
-              controller: TextEditingController(text: note.name),
+              controller: nameController,
               style: TextStyle(
                 fontSize: Theme.of(context).textTheme.headline4!.fontSize,
               ),
@@ -59,20 +61,18 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                 border: InputBorder.none,
                 hintText: 'Note name',
               ),
-              onChanged: (val) => note = note.copyWith(name: val),
             ),
           ),
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(20),
               child: TextField(
-                controller: TextEditingController(text: note.text),
+                controller: textController,
                 maxLines: null,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Note text',
                 ),
-                onChanged: (val) => note = note.copyWith(text: val),
               ),
             ),
           ),
@@ -82,7 +82,11 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   }
 
   _saveNote() async {
-    Navigator.pop(context);
+    final note = widget.note.copyWith(
+      name: nameController.text,
+      text: textController.text,
+    );
+
     if (note.isEmpty) {
       await widget.notesService.delete(note);
       final snackBar = SnackBar(content: Text('Empty note is deleted'));
@@ -90,5 +94,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     } else {
       await widget.notesService.set(note);
     }
+
+    Navigator.pop(context);
   }
 }
