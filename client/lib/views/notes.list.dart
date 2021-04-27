@@ -3,10 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
 import 'package:notik/views/mixins/list.search.dart';
+import 'package:notik/widgets/note.list.item.dart';
 
 class NotesList extends StatefulWidget {
   final NotesService notesService;
-  const NotesList({
+
+  NotesList({
     Key? key,
     required this.notesService,
   }) : super(key: key);
@@ -56,9 +58,12 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
         return _buildEmptyList();
       }
 
-      var children = listData
-          .where((n) => n.matches(searchQuery))
-          .map((e) => _NoteWidget(e, widget.notesService));
+      var children = listData.where((n) => n.matches(searchQuery)).map(
+            (e) => NoteListItem(
+              note: e,
+              onDelete: _deleteNote,
+            ),
+          );
       return ListView(
         padding: EdgeInsets.only(top: 16),
         children: children.toList(),
@@ -85,80 +90,14 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
     );
   }
 
+  void _deleteNote(Note note) {
+    widget.notesService.delete(note);
+  }
+
   void _navToNewNote() {
     Navigator.pushNamed(
       context,
       "/newnote",
-    );
-  }
-}
-
-class _NoteWidget extends StatelessWidget {
-  const _NoteWidget(this._note, this._service);
-
-  final NotesService _service;
-  final Note _note;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(_note.id!),
-      onDismissed: _deleteNote,
-      child: GestureDetector(
-        onTap: () => _navToEditNote(context),
-        child: Card(
-          shadowColor: Theme.of(context).shadowColor,
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          elevation: 3,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildNoteTitle(context),
-                ..._buildNoteText(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNoteTitle(BuildContext context) {
-    return Text(
-      _note.name,
-      style: Theme.of(context).textTheme.headline5,
-      maxLines: 1,
-      softWrap: false,
-      overflow: TextOverflow.fade,
-    );
-  }
-
-  List<Widget> _buildNoteText() {
-    if (_note.text.isEmpty) {
-      return [];
-    }
-
-    return [
-      Padding(padding: EdgeInsets.only(top: 16)),
-      Text(
-        _note.text,
-        overflow: TextOverflow.fade,
-        maxLines: 3,
-      )
-    ];
-  }
-
-  _deleteNote(DismissDirection dir) {
-    _service.delete(_note);
-  }
-
-  _navToEditNote(BuildContext context) {
-    Navigator.pushNamed(
-      context,
-      "/note",
-      arguments: _note,
     );
   }
 }

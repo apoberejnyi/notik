@@ -3,7 +3,7 @@ class Note {
   final String name;
   final String text;
 
-  const Note(this.id, this.name, this.text);
+  Note(this.id, this.name, this.text);
 
   bool get isEmpty {
     return name == "" && text == "";
