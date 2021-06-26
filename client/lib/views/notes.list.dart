@@ -30,11 +30,13 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: isSearching ? const BackButton() : null,
+        leading: isSearching
+            ? BackButton(color: Theme.of(context).accentColor)
+            : null,
         title: isSearching
             ? buildSearchField(searchHint: "Search notes...")
             : Text("Notes List"),
-        actions: buildSearchActions(),
+        actions: buildSearchActions(context),
       ),
       body: Center(
         child: StreamBuilder<List<Note>>(

@@ -6,11 +6,14 @@ abstract class ListSearch<T extends StatefulWidget> implements State<T> {
   var isSearching = false;
   var searchQuery = "";
 
-  List<Widget> buildSearchActions() {
+  List<Widget> buildSearchActions(BuildContext context) {
     if (isSearching) {
       return [
         IconButton(
-          icon: const Icon(Icons.clear),
+          icon: Icon(
+            Icons.clear,
+            color: Theme.of(context).accentColor,
+          ),
           onPressed: _clearSearch,
         ),
       ];
@@ -18,7 +21,10 @@ abstract class ListSearch<T extends StatefulWidget> implements State<T> {
 
     return [
       IconButton(
-        icon: const Icon(Icons.search),
+        icon: Icon(
+          Icons.search,
+          color: Theme.of(context).accentColor,
+        ),
         onPressed: _startSearch,
       ),
     ];
@@ -28,7 +34,7 @@ abstract class ListSearch<T extends StatefulWidget> implements State<T> {
     return TextField(
       controller: _searchQueryController,
       autofocus: true,
-      cursorColor: Theme.of(context).primaryTextTheme.bodyText1!.color,
+      cursorColor: Theme.of(context).primaryTextTheme.headline6!.color,
       decoration: InputDecoration(
         hintText: searchHint,
         border: InputBorder.none,

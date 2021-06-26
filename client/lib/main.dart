@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
+import 'package:notik/theme/colors.dart';
 import 'package:notik/views/new.note.dart';
 import 'package:notik/views/note.details.dart';
 import 'package:notik/views/notes.list.dart';
@@ -16,7 +17,14 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.orange),
+      theme: ThemeData(
+        accentColor: accent,
+        appBarTheme: AppBarTheme(backgroundColor: navigation),
+        scaffoldBackgroundColor: backround,
+        primaryTextTheme: TextTheme(
+          headline6: TextStyle(color: navigationText),
+        ),
+      ),
       initialRoute: '',
       onGenerateRoute: _generateRoute,
     );

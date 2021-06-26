@@ -39,44 +39,56 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit note"),
+        leading: BackButton(color: Theme.of(context).accentColor),
         actions: [
           IconButton(
             icon: Icon(Icons.save),
             tooltip: 'Save note',
             onPressed: _saveNote,
+            color: Theme.of(context).accentColor,
           )
         ],
       ),
-      body: Column(
+      body: ListView(
+        padding: const EdgeInsets.all(20),
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
-            child: TextField(
-              autofocus: widget.focus == EditNoteFocus.name,
-              controller: nameController,
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme.headline4!.fontSize,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Note name',
-              ),
-            ),
+            child: _buildNoteNameField(context),
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.all(20),
-              child: TextField(
-                controller: textController,
-                maxLines: null,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Note text',
-                ),
-              ),
+              child: _buildNoteTextField(),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  TextField _buildNoteNameField(BuildContext context) {
+    return TextField(
+      autofocus: widget.focus == EditNoteFocus.name,
+      controller: nameController,
+      textCapitalization: TextCapitalization.sentences,
+      maxLines: null,
+      style: TextStyle(
+        fontSize: Theme.of(context).textTheme.headline4!.fontSize,
+      ),
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: 'Note name',
+      ),
+    );
+  }
+
+  TextField _buildNoteTextField() {
+    return TextField(
+      controller: textController,
+      maxLines: null,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: 'Note text',
       ),
     );
   }

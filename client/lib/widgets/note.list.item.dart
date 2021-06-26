@@ -14,21 +14,19 @@ class NoteListItem extends StatelessWidget {
     return Dismissible(
       key: Key(note.id!),
       onDismissed: (direction) => onDelete(note),
+      background: Container(color: Colors.red),
       child: GestureDetector(
         onTap: () => _navToEditNote(context),
-        child: Card(
-          shadowColor: Theme.of(context).shadowColor,
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          elevation: 3,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildNoteTitle(context),
-                ..._buildNoteText(),
-              ],
-            ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          width: double.infinity,
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildNoteTitle(context),
+              ..._buildNoteText(),
+            ],
           ),
         ),
       ),
@@ -41,7 +39,7 @@ class NoteListItem extends StatelessWidget {
       style: Theme.of(context).textTheme.headline5,
       maxLines: 1,
       softWrap: false,
-      overflow: TextOverflow.fade,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
@@ -54,8 +52,8 @@ class NoteListItem extends StatelessWidget {
       Padding(padding: EdgeInsets.only(top: 16)),
       Text(
         note.text,
-        overflow: TextOverflow.fade,
-        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
       )
     ];
   }
