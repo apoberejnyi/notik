@@ -9,11 +9,13 @@ class EditNoteScreen extends StatefulWidget {
   final NotesService notesService;
   final Note note;
   final EditNoteFocus? focus;
+  final void Function(Note) onSave;
 
   EditNoteScreen({
     Key? key,
     required this.notesService,
     required this.note,
+    required this.onSave,
     this.focus,
   }) : super(key: key);
 
@@ -24,43 +26,38 @@ class EditNoteScreen extends StatefulWidget {
 }
 
 class _EditNoteScreenState extends State<EditNoteScreen> {
-  final nameController = TextEditingController();
-  final textController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    nameController.text = widget.note.name;
-    textController.text = widget.note.text;
-  }
+  final _nameController = TextEditingController();
+  final _textController = TextEditingController();
+  final _textFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
+    _nameController.text = widget.note.name;
+    _textController.text = widget.note.text;
+
     return Scaffold(
       appBar: AppBar(
+        leading: Navigator.canPop(context)
+            ? BackButton(color: Theme.of(context).accentColor)
+            : null,
         title: Text("Edit note"),
-        leading: BackButton(color: Theme.of(context).accentColor),
         actions: [
           IconButton(
             icon: Icon(Icons.save),
             tooltip: 'Save note',
             onPressed: _saveNote,
-            color: Theme.of(context).accentColor,
           )
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Container(
-            child: _buildNoteNameField(context),
-          ),
-          Expanded(
-            child: Container(
-              child: _buildNoteTextField(),
-            ),
-          ),
-        ],
+      body: GestureDetector(
+        onTap: () => _textFocus.requestFocus(),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            _buildNoteNameField(context),
+            _buildNoteTextField(),
+          ],
+        ),
       ),
     );
   }
@@ -68,7 +65,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   TextField _buildNoteNameField(BuildContext context) {
     return TextField(
       autofocus: widget.focus == EditNoteFocus.name,
-      controller: nameController,
+      controller: _nameController,
       textCapitalization: TextCapitalization.sentences,
       maxLines: null,
       style: TextStyle(
@@ -83,7 +80,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
 
   TextField _buildNoteTextField() {
     return TextField(
-      controller: textController,
+      controller: _textController,
+      focusNode: _textFocus,
       maxLines: null,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
@@ -95,8 +93,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
 
   _saveNote() async {
     final note = widget.note.copyWith(
-      name: nameController.text,
-      text: textController.text,
+      name: _nameController.text,
+      text: _textController.text,
     );
 
     if (note.isEmpty) {
@@ -107,6 +105,6 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       await widget.notesService.set(note);
     }
 
-    Navigator.pop(context);
+    this.widget.onSave(note);
   }
 }

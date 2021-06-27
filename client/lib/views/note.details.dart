@@ -16,6 +16,10 @@ class NoteDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EditNoteScreen(notesService: notesService, note: this.note);
+    return EditNoteScreen(
+      notesService: notesService,
+      note: this.note,
+      onSave: (note) => Navigator.pop(context),
+    );
   }
 }

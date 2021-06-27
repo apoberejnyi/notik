@@ -44,11 +44,6 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
           builder: _buildList,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _navToNewNote,
-        tooltip: "New Note",
-        child: Icon(Icons.add),
-      ),
     );
   }
 
@@ -103,12 +98,5 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(undoBar);
-  }
-
-  void _navToNewNote() {
-    Navigator.pushNamed(
-      context,
-      "/newnote",
-    );
   }
 }

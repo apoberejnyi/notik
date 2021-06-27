@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
+import 'package:notik/navigation.dart';
 import 'package:notik/theme/colors.dart';
-import 'package:notik/views/new.note.dart';
 import 'package:notik/views/note.details.dart';
-import 'package:notik/views/notes.list.dart';
 
 void main() {
   runApp(App());
@@ -19,8 +18,15 @@ class App extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         accentColor: accent,
-        appBarTheme: AppBarTheme(backgroundColor: navigation),
+        iconTheme: IconThemeData(color: accent),
+        appBarTheme: AppBarTheme(
+          backgroundColor: navigation,
+          actionsIconTheme: IconThemeData(color: accent),
+        ),
         scaffoldBackgroundColor: backround,
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          selectedItemColor: accent,
+        ),
         primaryTextTheme: TextTheme(
           headline6: TextStyle(color: navigationText),
         ),
@@ -40,16 +46,8 @@ class App extends StatelessWidget {
       );
     }
 
-    if (settings.name == '/newnote') {
-      return MaterialPageRoute(
-        builder: (context) => NewNoteScreen(
-          notesService: this._notesService,
-        ),
-      );
-    }
-
     return MaterialPageRoute(
-      builder: (context) => NotesList(
+      builder: (context) => NotikNavigation(
         notesService: this._notesService,
       ),
     );
