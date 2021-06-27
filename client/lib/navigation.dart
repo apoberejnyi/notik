@@ -18,16 +18,17 @@ class NotikNavigation extends StatefulWidget {
 class _NotikNavigationState extends State<NotikNavigation> {
   int _selectedIndex = 1;
 
-  List<Widget> _getViews() {
-    return [
-      NewNoteScreen(
+  Widget _getSelectedView() {
+    if (_selectedIndex == 0) {
+      return NewNoteScreen(
         notesService: widget.notesService,
         onSave: (note) => _setSelectedIndex(1),
-      ),
-      NotesList(
-        notesService: widget.notesService,
-      ),
-    ];
+      );
+    }
+
+    return NotesList(
+      notesService: widget.notesService,
+    );
   }
 
   void _setSelectedIndex(int index) {
@@ -39,10 +40,7 @@ class _NotikNavigationState extends State<NotikNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        children: _getViews(),
-        index: _selectedIndex,
-      ),
+      body: _getSelectedView(),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

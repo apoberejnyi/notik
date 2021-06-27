@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
@@ -20,9 +21,7 @@ class EditNoteScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return _EditNoteScreenState();
-  }
+  State<StatefulWidget> createState() => _EditNoteScreenState();
 }
 
 class _EditNoteScreenState extends State<EditNoteScreen> {
@@ -75,6 +74,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
         border: InputBorder.none,
         hintText: 'Note name',
       ),
+      textInputAction: TextInputAction.next,
     );
   }
 
