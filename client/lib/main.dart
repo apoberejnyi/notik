@@ -3,7 +3,7 @@ import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
 import 'package:notik/navigation.dart';
 import 'package:notik/theme/colors.dart';
-import 'package:notik/views/note.details.dart';
+import 'package:notik/views/edit.note.dart';
 
 void main() {
   runApp(App());
@@ -39,7 +39,7 @@ class App extends StatelessWidget {
   Route<dynamic> _generateRoute(RouteSettings settings) {
     if (settings.name == '/note') {
       return MaterialPageRoute(
-        builder: (context) => NoteDetailsScreen(
+        builder: (context) => EditNoteScreen(
           notesService: _notesService,
           note: settings.arguments as Note,
         ),

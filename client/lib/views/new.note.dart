@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
-import 'package:notik/views/edit.note.dart';
+import 'package:notik/views/note.dart';
 
 class NewNoteScreen extends StatefulWidget {
   final NotesService notesService;
@@ -23,7 +23,7 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return EditNoteScreen(
+    return NoteScreen(
       notesService: widget.notesService,
       note: _note,
       focus: EditNoteFocus.name,

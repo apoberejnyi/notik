@@ -2,24 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:notik/data/notes.service.dart';
 import 'package:notik/domain/note.dart';
+import 'package:notik/usecases/delete.note.dart';
 import 'package:notik/views/mixins/list.search.dart';
 import 'package:notik/widgets/note.list.item.dart';
 
-class NotesList extends StatefulWidget {
+class NotesListScreen extends StatefulWidget {
   final NotesService notesService;
 
-  NotesList({
+  NotesListScreen({
     Key? key,
     required this.notesService,
   }) : super(key: key);
 
   @override
   createState() {
-    return _NotesListState();
+    return _NotesListScreenState();
   }
 }
 
-class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
+class _NotesListScreenState extends State<NotesListScreen>
+    with ListSearch<NotesListScreen> {
   @override
   void initState() {
     super.initState();
@@ -55,15 +57,13 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
         return _buildEmptyList();
       }
 
-      var children = listData.where((n) => n.matches(searchQuery)).map(
-            (e) => NoteListItem(
-              note: e,
-              onDelete: _deleteNote,
-            ),
-          );
+      final noteDeletion = NoteDeletion(widget.notesService, context);
       return ListView(
         padding: EdgeInsets.only(top: 16),
-        children: children.toList(),
+        children: listData
+            .where((n) => n.matches(searchQuery))
+            .map((e) => NoteListItem(note: e, onDelete: noteDeletion.delete))
+            .toList(),
       );
     }
 
@@ -85,18 +85,5 @@ class _NotesListState extends State<NotesList> with ListSearch<NotesList> {
         )
       ],
     );
-  }
-
-  void _deleteNote(Note note) async {
-    await widget.notesService.delete(note);
-
-    final undoBar = SnackBar(
-      content: Text('Note is deleted'),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () => widget.notesService.set(note),
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(undoBar);
   }
 }

@@ -26,7 +26,7 @@ class _NotikNavigationState extends State<NotikNavigation> {
       );
     }
 
-    return NotesList(
+    return NotesListScreen(
       notesService: widget.notesService,
     );
   }
